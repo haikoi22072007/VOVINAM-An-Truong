@@ -1,0 +1,12 @@
+{
+  "id": "./",
+  "name": "Ứng dụng của tôi",
+  "short_name": "Ứng dụng",
+  "description": "Website mẫu có thể thêm vào màn hình chính.",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#2563eb"
+}
