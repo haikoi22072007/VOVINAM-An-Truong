@@ -57,7 +57,33 @@ let data={members:[],events:[],transactions:[],attendance:[]};
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved)data={...data,...saved}}catch(e){}
 let modalType='';
 const titles={overview:'Tổng quan',members:'Thành viên',attendance:'Điểm danh',events:'Lịch hoạt động',fund:'Quỹ CLB',settings:'Cài đặt'};
-function save(){localStorage.setItem(KEY,JSON.stringify(data));renderAll()}
+
+const BACKUP_KEY = 'clb-hub-v1-auto-backup';
+
+function save() {
+  try {
+    const payload = JSON.stringify(data);
+
+    // Lưu dữ liệu chính
+    localStorage.setItem(KEY, payload);
+
+    // Lưu thêm một bản dự phòng
+    localStorage.setItem(BACKUP_KEY, JSON.stringify({
+      savedAt: new Date().toISOString(),
+      data: data
+    }));
+
+    const status = document.getElementById('backupStatus');
+    if (status) {
+      status.textContent = 'Đã lưu tự động trên thiết bị này.';
+    }
+  } catch (error) {
+    alert('Không thể lưu dữ liệu. Hãy tải bản sao lưu.');
+  }
+
+  renderAll();
+}
+  
 function money(n){return new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND',maximumFractionDigits:0}).format(n||0)}
 function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function showPage(id){document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('pageTitle').textContent=titles[id]||'CLB Hub';if(id==='attendance')renderAttendance();if(id==='members')renderMembers();if(id==='events')renderEvents();if(id==='fund')renderFund();window.scrollTo(0,0)}
